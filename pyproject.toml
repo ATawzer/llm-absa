@@ -1,0 +1,53 @@
+[project]
+name = "llm-absa"
+version = "0.1.0"
+description = "Aspect-Based Sentiment Analysis over a corpus of documents using LLMs"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pydantic>=2",
+    "jinja2>=3",
+    "tenacity>=9",
+    "aiolimiter>=1.1",
+    "google-genai>=1.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=0.24",
+    "pytest-cov>=6",
+    "ruff>=0.8",
+    "mypy>=1.13",
+    "bandit>=1.7",
+    "pre-commit>=4",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/llm_absa"]
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: live-API tests against Gemini (needs an API key)",
+]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.coverage.run]
+source = ["src/llm_absa"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:"]
