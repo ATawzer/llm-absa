@@ -15,14 +15,14 @@ repos:
 
       - id: mypy
         name: mypy
-        entry: uv run mypy src
+        entry: uv run mypy llm_absa
         language: system
         types: [python]
         pass_filenames: false
 
       - id: bandit
         name: bandit
-        entry: uv run bandit -r src -q
+        entry: uv run bandit -r llm_absa -q
         language: system
         types: [python]
         pass_filenames: false
