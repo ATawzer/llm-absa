@@ -6,6 +6,18 @@ scheme: merging a PR bumps the minor version; major version bumps are a delibera
 
 ## [Unreleased]
 
+## [0.3] - 2026-07-04
+
+### Added
+
+- `LLMBackend` Protocol (`llm_absa/backend/protocol.py`) — provider-agnostic
+  async/sync interface for structured-output LLM calls.
+- `GeminiBackend` and `RetryConfig` (`llm_absa/backend/gemini.py`) — Gemini
+  implementation using native `response_schema` structured output, with
+  tenacity-based retry scoped to rate-limit (429) errors only.
+- `MockBackend` fixture in `tests/conftest.py` for network-free unit testing
+  of downstream pipeline logic.
+
 ## [0.2] - 2026-07-04
 
 ### Changed
