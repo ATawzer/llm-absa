@@ -1,3 +1,4 @@
+from llm_absa.backend import GeminiBackend, LLMBackend, RetryConfig
 from llm_absa.models import (
     Aspect,
     DocumentResult,
@@ -10,6 +11,9 @@ from llm_absa.models import (
 __all__ = [
     "Aspect",
     "DocumentResult",
+    "GeminiBackend",
+    "LLMBackend",
+    "RetryConfig",
     "RunResult",
     "Taxonomy",
     "TaxonomyCategory",
