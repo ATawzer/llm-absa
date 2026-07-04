@@ -6,6 +6,18 @@ scheme: merging a PR bumps the minor version; major version bumps are a delibera
 
 ## [Unreleased]
 
+## [0.2] - 2026-07-04
+
+### Changed
+
+- Flattened package layout from `src/llm_absa` to a top-level `llm_absa` package; updated
+  hatchling and coverage config accordingly.
+
+### Fixed
+
+- Corrected pre-commit's `mypy` and `bandit` hook entries, which still referenced the old
+  `src` path.
+
 ## [0.1] - 2026-07-02
 
 ### Added
