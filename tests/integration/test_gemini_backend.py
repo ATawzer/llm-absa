@@ -1,4 +1,4 @@
-"""Live-API tests for GeminiBackend. Requires GOOGLE_API_KEY."""
+"""Live-API tests for GeminiBackend. Requires GEMINI_API_KEY."""
 
 import os
 
@@ -18,9 +18,9 @@ class _Answer(BaseModel):
 
 @pytest.fixture
 def backend() -> GeminiBackend:
-    api_key = os.environ.get("GOOGLE_API_KEY")
+    api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
-        pytest.skip("GOOGLE_API_KEY not set")
+        pytest.skip("GEMINI_API_KEY not set")
     return GeminiBackend(api_key=api_key, model=_MODEL)
 
 
