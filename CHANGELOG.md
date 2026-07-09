@@ -6,6 +6,23 @@ scheme: merging a PR bumps the minor version; major version bumps are a delibera
 
 ## [Unreleased]
 
+## [0.4] - 2026-07-08
+
+### Added
+
+- `discover_batch` and `canonicalize` (`llm_absa/discovery.py`) — sequential per-batch
+  `(category, feature)` pair extraction, accumulated against prior batches, collapsed into a
+  canonical `Taxonomy` via a final canonicalization pass.
+- Jinja2 prompt templates for discovery and canonicalization under `llm_absa/prompts/`, rendered
+  through a shared environment helper (`llm_absa/prompts/__init__.py`).
+- `docs/discovery.md` documenting the discovery pipeline and a worked example.
+
+### Fixed
+
+- Integration tests read `GEMINI_API_KEY` instead of `GOOGLE_API_KEY`, matching the env var the
+  maintainer actually sets (`google-genai` supports both, preferring `GOOGLE_API_KEY` if both are
+  present).
+
 ## [0.3] - 2026-07-04
 
 ### Added
