@@ -6,6 +6,8 @@ scheme: merging a PR bumps the minor version; major version bumps are a delibera
 
 ## [Unreleased]
 
+## [0.5] - 2026-07-09
+
 ### Added
 
 - `classify_document` (`llm_absa/classify.py`) — extracts aspects for a single document,
