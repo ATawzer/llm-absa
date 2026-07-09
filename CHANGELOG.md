@@ -6,6 +6,13 @@ scheme: merging a PR bumps the minor version; major version bumps are a delibera
 
 ## [Unreleased]
 
+### Added
+
+- `classify_document` (`llm_absa/classify.py`) — extracts aspects for a single document,
+  constrained to a canonical `Taxonomy`, with `max_chars` truncation.
+- `classify` Jinja2 prompt templates under `llm_absa/prompts/classify/`, completing the set of
+  six templates (discovery, canonicalization, classification).
+
 ## [0.4] - 2026-07-08
 
 ### Added
