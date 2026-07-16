@@ -29,6 +29,7 @@ async def discover_batch(
     backend: LLMBackend,
     *,
     seed_categories: list[str] | None = None,
+    context: str | None = None,
 ) -> tuple[list[DiscoveredPair], bool]: ...
 ```
 
@@ -40,6 +41,9 @@ Extracts raw `(category, feature)` pairs from one batch of document text.
   genuinely new pairs. Pass `None` on the first call.
 - `backend` — anything implementing `LLMBackend` (e.g. `GeminiBackend`).
 - `seed_categories` — category names to prefer reusing over inventing new ones. Optional.
+- `context` — free text spliced into the system prompt as-is. Use it to describe the corpus
+  ("these are Steam game reviews") or to give direct instructions ("ignore mentions of price").
+  Optional.
 
 **Get back:**
 - `list[DiscoveredPair]` — the new `(category, feature)` pairs found in this batch.
@@ -52,6 +56,8 @@ async def canonicalize(
     raw_pairs: dict[str, list[str]],
     seed_categories: list[str],
     backend: LLMBackend,
+    *,
+    context: str | None = None,
 ) -> Taxonomy: ...
 ```
 
@@ -61,6 +67,9 @@ Collapses raw pairs — including duplicates and near-duplicates — into a cano
 - `raw_pairs` — `{category: [raw feature strings]}`, accumulated across all discovery batches.
 - `seed_categories` — category names to prefer over inventing new ones.
 - `backend` — same as above.
+- `context` — free text spliced into the system prompt as-is, same as in `discover_batch`.
+  Optional, and independent of the `context` passed to `discover_batch` — pass it again here if
+  you want it to apply to canonicalization too.
 
 **Get back:**
 - A `Taxonomy`: each feature has one canonical name plus every raw alias that maps to it, and
@@ -78,6 +87,7 @@ from llm_absa.models import Taxonomy, TaxonomyCategory, TaxonomyFeature
 async def discover(documents: list[str], seed_categories: list[str] | None = None) -> Taxonomy:
     backend = GeminiBackend(api_key="...", model="gemini-2.5-flash")
     seed_categories = seed_categories or []
+    context = "These are Steam game reviews."
     batch_size = 10
 
     raw_pairs: dict[str, list[str]] = {}
@@ -86,7 +96,7 @@ async def discover(documents: list[str], seed_categories: list[str] | None = Non
     for i in range(0, len(documents), batch_size):
         batch = documents[i : i + batch_size]
         pairs, complete = await discover_batch(
-            batch, accumulated, backend, seed_categories=seed_categories
+            batch, accumulated, backend, seed_categories=seed_categories, context=context
         )
         for pair in pairs:
             raw_pairs.setdefault(pair.category, []).append(pair.feature)
@@ -107,7 +117,7 @@ async def discover(documents: list[str], seed_categories: list[str] | None = Non
         if complete:
             break
 
-    return await canonicalize(raw_pairs, seed_categories, backend)
+    return await canonicalize(raw_pairs, seed_categories, backend, context=context)
 
 taxonomy = asyncio.run(discover(my_documents, seed_categories=["Performance", "Support"]))
 ```

@@ -91,6 +91,37 @@ async def test_adiscover_only_samples_discovery_sample_size(mock_backend_factory
     assert "doc two" not in backend.calls[0][1]
 
 
+async def test_adiscover_threads_context_per_stage(mock_backend_factory):
+    batch = _DiscoveryBatchResult(pairs=[], taxonomy_complete=True)
+    final_taxonomy = _taxonomy()
+    backend = mock_backend_factory([batch, final_taxonomy])
+    pipeline = Pipeline(
+        backend,
+        PipelineConfig(
+            discovery_context="discovery instructions",
+            canonicalize_context="canonicalize instructions",
+        ),
+    )
+
+    await pipeline.adiscover(["doc one"])
+
+    discover_system, canonicalize_system = backend.calls[0][0], backend.calls[1][0]
+    assert "discovery instructions" in discover_system
+    assert "canonicalize instructions" not in discover_system
+    assert "canonicalize instructions" in canonicalize_system
+    assert "discovery instructions" not in canonicalize_system
+
+
+async def test_aclassify_threads_classify_context():
+    response = _ClassifyResult(aspects=[])
+    backend = KeyedBackend({"doc one": response})
+    pipeline = Pipeline(backend, PipelineConfig(classify_context="classify instructions"))
+
+    await pipeline.aclassify(["doc one"], _taxonomy())
+
+    assert "classify instructions" in backend.calls[0][0]
+
+
 async def test_aclassify_returns_results_for_all_documents():
     response = _ClassifyResult(aspects=[])
     backend = KeyedBackend({"doc one": response, "doc two": response})

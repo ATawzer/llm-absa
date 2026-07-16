@@ -6,6 +6,18 @@ scheme: merging a PR bumps the minor version; major version bumps are a delibera
 
 ## [Unreleased]
 
+## [0.7] - 2026-07-15
+
+### Added
+
+- `context` parameter on `discover_batch`, `canonicalize`, and `classify_document`
+  (`llm_absa/discovery.py`, `llm_absa/classify.py`) — free text spliced as-is into that stage's
+  system prompt, for domain framing ("these are Steam game reviews") or direct instructions
+  ("ignore mentions of price").
+- `PipelineConfig.discovery_context` / `canonicalize_context` / `classify_context`
+  (`llm_absa/pipeline.py`) — independent per-stage wiring for the above, so callers can set
+  context at one stage without affecting the others.
+
 ## [0.6] - 2026-07-15
 
 ### Added

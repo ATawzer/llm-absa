@@ -19,9 +19,10 @@ async def classify_document(
     backend: LLMBackend,
     *,
     max_chars: int = 2000,
+    context: str | None = None,
 ) -> list[Aspect]:
     """Extract aspects from one document, constrained to the given taxonomy."""
-    system = render("classify/system.jinja2", taxonomy=taxonomy.to_dict())
+    system = render("classify/system.jinja2", taxonomy=taxonomy.to_dict(), context=context)
     user = render("classify/user.jinja2", document_text=text[:max_chars])
     result = await backend.agenerate(system, user, _ClassifyResult)
     return result.aspects

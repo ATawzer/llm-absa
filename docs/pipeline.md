@@ -29,6 +29,9 @@ class PipelineConfig:
     concurrency: int = 10
     requests_per_minute: int = 60
     on_progress: Callable[[DocumentResult], None] | None = None
+    discovery_context: str | None = None
+    canonicalize_context: str | None = None
+    classify_context: str | None = None
 ```
 
 - `seed_categories` — category names discovery should prefer reusing over inventing new ones.
@@ -40,6 +43,10 @@ class PipelineConfig:
 - `requests_per_minute` — a hard cap on classification call rate, independent of `concurrency`.
 - `on_progress` — called with each document's `DocumentResult` as soon as it finishes classifying,
   in whatever order results land — useful for progress bars or persisting results incrementally.
+- `discovery_context` / `canonicalize_context` / `classify_context` — free text spliced as-is into
+  that stage's system prompt. Each is independent, so you can set one, all three, or none — use
+  them to describe the corpus ("these are Steam game reviews") or give direct instructions
+  ("ignore mentions of price").
 
 ## `adiscover` / `discover`
 
@@ -113,6 +120,8 @@ async def main() -> None:
             concurrency=5,
             requests_per_minute=30,
             on_progress=lambda r: print(f"done: {r.document_id} ({len(r.aspects)} aspects)"),
+            discovery_context="These are Steam game reviews.",
+            classify_context="These are Steam game reviews.",
         ),
     )
 

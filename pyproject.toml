@@ -1,6 +1,6 @@
 [project]
 name = "llm-absa"
-version = "0.6"
+version = "0.7"
 description = "Aspect-Based Sentiment Analysis over a corpus of documents using LLMs"
 readme = "README.md"
 requires-python = ">=3.13"

@@ -26,6 +26,9 @@ class PipelineConfig:
     concurrency: int = 10
     requests_per_minute: int = 60
     on_progress: Callable[[DocumentResult], None] | None = None
+    discovery_context: str | None = None
+    canonicalize_context: str | None = None
+    classify_context: str | None = None
 
 
 def _taxonomy_from_raw_pairs(
@@ -65,6 +68,7 @@ class Pipeline:
                 accumulated,
                 self.backend,
                 seed_categories=self.config.seed_categories,
+                context=self.config.discovery_context,
             )
             for pair in pairs:
                 features = raw_pairs.setdefault(pair.category, [])
@@ -74,7 +78,12 @@ class Pipeline:
             if complete:
                 break
 
-        return await canonicalize(raw_pairs, self.config.seed_categories, self.backend)
+        return await canonicalize(
+            raw_pairs,
+            self.config.seed_categories,
+            self.backend,
+            context=self.config.canonicalize_context,
+        )
 
     async def aclassify(
         self,
@@ -92,7 +101,11 @@ class Pipeline:
         async def _run_one(doc_id: str | int, text: str) -> DocumentResult:
             async with semaphore, limiter:
                 aspects = await classify_document(
-                    text, taxonomy, self.backend, max_chars=self.config.max_chars
+                    text,
+                    taxonomy,
+                    self.backend,
+                    max_chars=self.config.max_chars,
+                    context=self.config.classify_context,
                 )
             return DocumentResult(document_id=doc_id, aspects=aspects)
 
