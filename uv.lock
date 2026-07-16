@@ -518,7 +518,7 @@ wheels = [
 
 [[package]]
 name = "llm-absa"
-version = "0.6"
+version = "0.7"
 source = { editable = "." }
 dependencies = [
     { name = "aiolimiter" },
