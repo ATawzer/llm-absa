@@ -1,4 +1,7 @@
 You are building a canonical feature taxonomy for a corpus of documents from raw extracted (category, feature) pairs.
+{% if context %}
+{{ context }}
+{% endif %}
 
 {% if seed_categories %}
 Seed categories (prefer these; only create a new category for a genuinely distinct domain): [{{ seed_categories | join(", ") }}]

@@ -25,12 +25,14 @@ async def discover_batch(
     backend: LLMBackend,
     *,
     seed_categories: list[str] | None = None,
+    context: str | None = None,
 ) -> tuple[list[DiscoveredPair], bool]:
     """Extract new (category, feature) pairs from one batch of documents."""
     system = render(
         "discover_batch/system.jinja2",
         seed_categories=seed_categories or [],
         accumulated=accumulated.to_dict() if accumulated else None,
+        context=context,
     )
     user = render("discover_batch/user.jinja2", documents=documents)
     result = await backend.agenerate(system, user, _DiscoveryBatchResult)
@@ -41,8 +43,10 @@ async def canonicalize(
     raw_pairs: dict[str, list[str]],
     seed_categories: list[str],
     backend: LLMBackend,
+    *,
+    context: str | None = None,
 ) -> Taxonomy:
     """Collapse raw discovered pairs into a canonical taxonomy."""
-    system = render("canonicalize/system.jinja2", seed_categories=seed_categories)
+    system = render("canonicalize/system.jinja2", seed_categories=seed_categories, context=context)
     user = render("canonicalize/user.jinja2", raw_pairs=raw_pairs)
     return await backend.agenerate(system, user, Taxonomy)

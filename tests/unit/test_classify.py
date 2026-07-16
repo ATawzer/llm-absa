@@ -45,6 +45,18 @@ async def test_classify_document_renders_taxonomy(mock_backend_factory):
     assert "load time" in system_prompt
 
 
+async def test_classify_document_renders_context(mock_backend_factory):
+    response = _ClassifyResult(aspects=[])
+    backend = mock_backend_factory([response])
+
+    await classify_document(
+        "doc text", _taxonomy(), backend, context="These are Steam game reviews."
+    )
+
+    system_prompt = backend.calls[0][0]
+    assert "These are Steam game reviews." in system_prompt
+
+
 async def test_classify_document_truncates_to_max_chars(mock_backend_factory):
     response = _ClassifyResult(aspects=[])
     backend = mock_backend_factory([response])

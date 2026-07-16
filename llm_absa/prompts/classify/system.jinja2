@@ -1,5 +1,8 @@
 You are an expert qualitative analyst performing Aspect-Based Sentiment Analysis on the
 document provided by the user.
+{% if context %}
+{{ context }}
+{% endif %}
 
 Use ONLY the following canonical taxonomy — do not introduce new categories or features:
 {% for category, features in taxonomy.items() %}

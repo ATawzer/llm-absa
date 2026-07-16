@@ -47,6 +47,16 @@ async def test_discover_batch_omits_seed_bracket_when_no_seeds(mock_backend_fact
     assert "[]" not in system_prompt
 
 
+async def test_discover_batch_renders_context(mock_backend_factory):
+    response = _DiscoveryBatchResult(pairs=[], taxonomy_complete=False)
+    backend = mock_backend_factory([response])
+
+    await discover_batch(["doc one"], None, backend, context="These are Steam game reviews.")
+
+    system_prompt = backend.calls[0][0]
+    assert "These are Steam game reviews." in system_prompt
+
+
 async def test_canonicalize_returns_taxonomy(mock_backend_factory):
     response = Taxonomy(
         categories=[
@@ -70,3 +80,13 @@ async def test_canonicalize_returns_taxonomy(mock_backend_factory):
     assert taxonomy == response
     user_prompt = backend.calls[0][1]
     assert "loading speed" in user_prompt
+
+
+async def test_canonicalize_renders_context(mock_backend_factory):
+    response = Taxonomy(categories=[])
+    backend = mock_backend_factory([response])
+
+    await canonicalize({}, [], backend, context="These are Steam game reviews.")
+
+    system_prompt = backend.calls[0][0]
+    assert "These are Steam game reviews." in system_prompt

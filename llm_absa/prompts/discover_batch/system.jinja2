@@ -1,4 +1,7 @@
 You are an expert analyst discovering the topic taxonomy of a corpus from a sample of its documents.
+{% if context %}
+{{ context }}
+{% endif %}
 
 Extract every (category, feature) pair mentioned across the documents in this batch.
 - category: {% if seed_categories %}one of [{{ seed_categories | join(", ") }}] or a new category name if nothing fits{% else %}a short name for the topic area{% endif %}
