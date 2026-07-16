@@ -6,6 +6,20 @@ scheme: merging a PR bumps the minor version; major version bumps are a delibera
 
 ## [Unreleased]
 
+## [0.6] - 2026-07-15
+
+### Added
+
+- `Pipeline` and `PipelineConfig` (`llm_absa/pipeline.py`) — async-first
+  orchestration tying discovery and classification together. `adiscover`
+  runs discovery batches sequentially; `aclassify` fans out classification
+  concurrently via `asyncio.gather`, bounded by a semaphore and an
+  `aiolimiter.AsyncLimiter`; `arun` chains both into a `RunResult`. Sync
+  `discover`/`classify`/`run` wrappers included. Per-document classification
+  failures are isolated and counted into `stats["failed"]` rather than
+  aborting the batch.
+- `docs/pipeline.md` documenting `Pipeline` usage and a worked example.
+
 ## [0.5] - 2026-07-09
 
 ### Added
